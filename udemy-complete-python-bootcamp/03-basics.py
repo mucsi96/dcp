@@ -88,9 +88,13 @@ class TestBasics(unittest.TestCase):
         a.sort()
         self.assertEqual(a, [2, 5, 7])
 
+        self.assertEqual(sorted([5, 2, 7]), [2, 5, 7])
+
         a = [5, 2, 7]
         a.reverse()
         self.assertEqual(a, [7, 2, 5])
+
+        self.assertEqual(list(reversed([5, 2, 7])), [7, 2, 5])
 
     def test_dictionaries(self):
         a = { 'k1': 1, 'k2': 2, 'k3': 3 }
