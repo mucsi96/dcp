@@ -18,6 +18,8 @@ class TestBasics(unittest.TestCase):
         self.assertEqual((2 + 10) * (10 + 3), 156)
 
     def test_types(self):
+        self.assertEqual(type(False), bool)
+        self.assertEqual(type(True), bool)
         self.assertEqual(type(10), int)
         self.assertEqual(type(30.1), float)
         self.assertEqual(type('hello'), str)
@@ -27,6 +29,7 @@ class TestBasics(unittest.TestCase):
         self.assertEqual(type([1, 2]), list)
         self.assertEqual(type(()), tuple)
         self.assertEqual(type((1, 2)), tuple)
+        self.assertEqual(type({1, 2}), set)
 
     def test_strings(self):
         self.assertEqual('hello', "hello")
@@ -64,12 +67,77 @@ class TestBasics(unittest.TestCase):
         self.assertEqual([1, 2, 3][0], 1)
         self.assertEqual([1, 2, 3][1:], [2, 3])
         self.assertEqual([1, 2, 3] + [4, 5], [1, 2, 3, 4, 5])
-        a = [1, 2, 3]; self.assertEqual(2 * a, [1, 2, 3, 1, 2, 3])
-        a = [1, 2, 3]; a[0] = 4; self.assertEqual(a, [4, 2, 3])
-        a = [1, 2, 3]; self.assertEqual(a.pop(), 3); self.assertEqual(a, [1, 2])
-        a = [1, 2, 3]; self.assertEqual(a.pop(1), 2); self.assertEqual(a, [1, 3])
-        a = [5, 2, 7]; a.sort(); self.assertEqual(a, [2, 5, 7])
-        a = [5, 2, 7]; a.reverse(); self.assertEqual(a, [7, 2, 5])
+
+        a = [1, 2, 3]
+        self.assertEqual(2 * a, [1, 2, 3, 1, 2, 3])
+
+        a = [1, 2, 3]
+        a[0] = 4
+        self.assertEqual(a, [4, 2, 3])
+
+        a = [1, 2, 3]
+        self.assertEqual(a.pop(), 3)
+        self.assertEqual(a, [1, 2])
+
+        a = [1, 2, 3]
+
+        self.assertEqual(a.pop(1), 2)
+        self.assertEqual(a, [1, 3])
+
+        a = [5, 2, 7]
+        a.sort()
+        self.assertEqual(a, [2, 5, 7])
+
+        a = [5, 2, 7]
+        a.reverse()
+        self.assertEqual(a, [7, 2, 5])
+
+    def test_dictionaries(self):
+        a = { 'k1': 1, 'k2': 2, 'k3': 3 }
+        self.assertEqual(a['k2'], 2)
+        self.assertEqual(list(a.keys()), ['k1', 'k2', 'k3'])
+        self.assertEqual(list(a.values()), [1, 2, 3])
+        self.assertEqual(list(a.items()), [('k1', 1), ('k2', 2), ('k3', 3)])
+
+        x = 3
+        b = { 1: 1, 2: 4, 3: 9, x: 16 }
+        self.assertEqual(b[x], 16)
+
+    def test_tuples(self):
+        a = ('a', 'a', 'b')
+        self.assertEqual(a + a, ('a', 'a', 'b', 'a', 'a', 'b'))
+        self.assertEqual(a * 3, ('a', 'a', 'b', 'a', 'a', 'b', 'a', 'a', 'b'))
+        self.assertEqual(a[1], 'a')
+        self.assertEqual(a[-1], 'b')
+        self.assertEqual(a.count('a'), 2)
+        self.assertEqual(a.index('b'), 2)
+
+    def test_sets(self):
+        a = { 1, 3, 7 }
+        a.add(9)
+        self.assertEqual(a, { 1, 3, 7, 9 })
+
+        a.add(7)
+        self.assertEqual(a, { 1, 3, 7, 9 })
+
+        self.assertEqual(set([1, 6, 3, 2, 6, 1, 1, 3 ]), { 1, 2, 3, 6 })
+
+    def test_files(self):
+        myFile = open('03-basics-test.txt')
+        self.assertEqual(myFile.read(), 'Hello\nWorld\n')
+        self.assertEqual(myFile.read(), '')
+
+        myFile.seek(0)
+        self.assertEqual(myFile.read(), 'Hello\nWorld\n')
+
+        myFile.seek(0)
+        self.assertEqual(myFile.readlines(), ['Hello\n', 'World\n'])
+        myFile.close()
+
+        with open('03-basics-test.txt', mode='w+') as myFile:
+            myFile.write('Hello\nWorld\n')
+            myFile.seek(0)
+            self.assertEqual(len(myFile.read()), 12)
 
 if __name__ == '__main__':
     unittest.main()
